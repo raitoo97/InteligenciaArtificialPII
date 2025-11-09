@@ -4,7 +4,8 @@ public class FSM
     public enum State
     {
         patrol,
-        chase
+        chase,
+        search
     }
     private IState _currentState;
     private Dictionary<State, IState> _allStates = new Dictionary<State, IState>();

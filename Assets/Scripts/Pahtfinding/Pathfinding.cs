@@ -27,15 +27,15 @@ public static class Pathfinding
             {
                 var newCost = costSoFar[current] + node.GetCost;
                 var distance = (goal.transform.position - node.transform.position).magnitude;
-                var totalCost = newCost + distance;
+                var priority = newCost + distance;
                 if (!cameFrom.ContainsKey(node))
                 {
-                    frontier.Enqueue(node, totalCost);
+                    frontier.Enqueue(node, priority);
                     cameFrom.Add(node, current);
                     costSoFar.Add(node, newCost);
                 }else if (costSoFar[node]> newCost)
                 {
-                    frontier.Enqueue(node, totalCost);
+                    frontier.Enqueue(node, priority);
                     cameFrom[node] = current;
                     costSoFar[node] = newCost;
                 }
