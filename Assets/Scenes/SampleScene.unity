@@ -1524,7 +1524,7 @@ MonoBehaviour:
   _maxVelocity: 5
   _maxSteeringForce: 0.1
   _radiusArrive: 7.5
-  _maxStamina: 0
+  _maxStamina: 50
   _wayPoints:
   - {fileID: 1352472149448411022}
   - {fileID: 1728423913}
