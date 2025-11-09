@@ -7,6 +7,7 @@ public class PatrolState : IState
     private float _nearDistance;
     private Enemy _enemy;
     private FSM _fsm;
+    private List<Vector3> _currentPath = new List<Vector3>();
     public PatrolState(List<Transform> wayPoints,float nearDistance,Enemy enemy, FSM fsm)
     {
         _wayPoints = wayPoints;
@@ -18,18 +19,34 @@ public class PatrolState : IState
     {
         Debug.Log("Enter Patrol");
         _currentTarget = _wayPoints[_enemy.Index];
+        if (!LineOfSight.IsOnSight(_enemy.transform.position, _currentTarget.position))
+        {
+            _enemy.CalculatePath(_currentTarget.position,_currentPath);
+        }
     }
     public void OnUpdate()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            _fsm.ChangeState(FSM.State.search);
+            return;
+        }
+        if (_currentPath.Count > 0)
+        {
+            var currentTarget = _currentPath[0];
+            _enemy.GetSeekForce(currentTarget);
+            _enemy.RotateTo(currentTarget - _enemy.transform.position);
+            var dis = (currentTarget - _enemy.transform.position).magnitude;
+            if (dis < _nearDistance)
+            {
+                _currentPath.RemoveAt(0);
+            }
+            return;
+        }
         _enemy.GetArriveForce(_currentTarget.position);
         var dir = _currentTarget.transform.position - _enemy.transform.position;
         var distance = dir.magnitude;
-        if (dir != Vector3.zero)
-        {
-            dir.y = 0;
-            Quaternion rotation = Quaternion.LookRotation(dir);
-            _enemy.transform.rotation = Quaternion.RotateTowards(_enemy.transform.rotation, rotation, _enemy.RotateDegrees * Time.deltaTime);
-        }
+        _enemy.RotateTo(dir);
         if (distance < _nearDistance) 
         {
             _enemy.CleanForce();
@@ -47,6 +64,6 @@ public class PatrolState : IState
     }
     public void OnExit()
     {
-        Debug.Log("Exit Patrol");
+        _currentPath.Clear();
     }
 }

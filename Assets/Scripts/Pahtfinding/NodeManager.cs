@@ -3,6 +3,7 @@ using UnityEngine;
 public static class NodeManager
 {
     [SerializeField]private static List<Node> _allNodes = new List<Node>();
+    public static float _maxDistanceNeighbord = 20;
     public static void RegisterNode(Node node)
     {
         if(_allNodes.Contains(node)) return;
@@ -21,7 +22,8 @@ public static class NodeManager
             {
                 if(node == neigbord)continue;
                 if(LineOfSight.IsOnSight(node.transform.position, neigbord.transform.position))
-                    node.AddNeigbord(neigbord);
+                    if (Vector3.Distance(node.transform.position, neigbord.transform.position) < _maxDistanceNeighbord)
+                        node.AddNeigbord(neigbord);
             }
         }
     }

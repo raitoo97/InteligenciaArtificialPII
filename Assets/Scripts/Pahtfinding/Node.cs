@@ -8,10 +8,6 @@ public class Node : MonoBehaviour
     {
         NodeManager.RegisterNode(this);
     }
-    private void Start()
-    {
-        NodeManager.CompleteNeighbords();
-    }
     public void AddNeigbord(Node node)
     {
         if (_neighbords.Contains(node)) return;

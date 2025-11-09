@@ -3,37 +3,44 @@ using UnityEngine;
 public class SearchState : IState
 {
     private Player _player;
-    private List<Vector3> path = new List<Vector3>();
-    private List<Node> nodePath = new List<Node>();
+    private float _nearDistance;
     private Enemy _enemy;
     private FSM _fsm;
-    public SearchState(Player player, Enemy enemy, FSM fsm)
+    private List<Vector3> _currentPath = new List<Vector3>();
+    public SearchState(Player player, float nearDistance, Enemy enemy, FSM fsm)
     {
         _player = player;
         _enemy = enemy;
+        _nearDistance = nearDistance;
         _fsm = fsm;
     }
     public void Onstart()
     {
-
-    }
-    public void OnExit()
-    {
-        throw new System.NotImplementedException();
+        if(LineOfSight.IsOnSight(_enemy.transform.position, _player.transform.position))
+        {
+            //return;
+        }
+        _enemy.CalculatePath(_player.transform.position,_currentPath);
     }
     public void OnUpdate()
     {
-
-    }
-    private void CalculatePath(Vector3 target)
-    {
-        var start = NodeManager.GetClosetNode(_enemy.transform.position);
-        var end = NodeManager.GetClosetNode(target);
-        nodePath = Pathfinding.CalculateAStar(start, end);
-        foreach (var node in nodePath) 
+        if (_currentPath.Count > 0)
         {
-            path.Add(node.transform.position);
+            var currentTarget = _currentPath[0];
+            _enemy.GetSeekForce(currentTarget);
+            _enemy.RotateTo(currentTarget - _enemy.transform.position);
+            var distance = (currentTarget - _enemy.transform.position).magnitude;
+            if (distance < _nearDistance)
+            {
+                _currentPath.RemoveAt(0);
+            }
+            return;
         }
-
+        _enemy.CleanForce();
+        _fsm.ChangeState(FSM.State.patrol);
+    }
+    public void OnExit()
+    {
+        _currentPath.Clear();
     }
 }
