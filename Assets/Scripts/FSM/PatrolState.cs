@@ -34,8 +34,8 @@ public class PatrolState : IState
         if (_currentPath.Count > 0)
         {
             var currentTarget = _currentPath[0];
-            _enemy.GetSeekForce(currentTarget);
             _enemy.RotateTo(currentTarget - _enemy.transform.position);
+            _enemy.GetSeekForce(currentTarget);
             var dis = (currentTarget - _enemy.transform.position).magnitude;
             if (dis < _nearDistance)
             {
@@ -43,10 +43,10 @@ public class PatrolState : IState
             }
             return;
         }
-        _enemy.GetArriveForce(_currentTarget.position);
         var dir = _currentTarget.transform.position - _enemy.transform.position;
         var distance = dir.magnitude;
         _enemy.RotateTo(dir);
+        _enemy.GetArriveForce(_currentTarget.position);
         if (distance < _nearDistance) 
         {
             _enemy.CleanForce();
@@ -64,6 +64,7 @@ public class PatrolState : IState
     }
     public void OnExit()
     {
+        Debug.Log("Exit Patrol");
         _currentPath.Clear();
     }
 }

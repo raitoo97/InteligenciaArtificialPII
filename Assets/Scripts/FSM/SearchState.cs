@@ -16,6 +16,7 @@ public class SearchState : IState
     }
     public void Onstart()
     {
+        Debug.Log("Enter Search");
         if (FOV.InFOV(_player.transform,_enemy.transform,_enemy.ViewRadius,_enemy.ViewAngle))
         {
             _fsm.ChangeState(FSM.State.chase);
@@ -27,8 +28,8 @@ public class SearchState : IState
         if (_currentPath.Count > 0)
         {
             var currentTarget = _currentPath[0];
-            _enemy.GetSeekForce(currentTarget);
             _enemy.RotateTo(currentTarget - _enemy.transform.position);
+            _enemy.GetSeekForce(currentTarget);
             var distance = (currentTarget - _enemy.transform.position).magnitude;
             if (distance < _nearDistance)
             {
@@ -39,11 +40,14 @@ public class SearchState : IState
         if(!FOV.InFOV(_player.transform, _enemy.transform, _enemy.ViewRadius, _enemy.ViewAngle))
         {
             _fsm.ChangeState(FSM.State.patrol);
+            return;
         }
+        Debug.Log("Lo veo");
         _enemy.CleanForce();
     }
     public void OnExit()
     {
+        Debug.Log("Exit Search");
         _currentPath.Clear();
     }
 }

@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class ChaseState : IState
 {
-    public void OnExit()
-    {
-        Debug.Log("Enter Chase");
-    }
     public void Onstart()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Enter Chase");
     }
     public void OnUpdate()
     {
         throw new System.NotImplementedException();
+    }
+    public void OnExit()
+    {
+        Debug.Log("Exit Chase");
     }
 
 }

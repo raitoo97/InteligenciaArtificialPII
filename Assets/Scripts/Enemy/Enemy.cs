@@ -45,11 +45,19 @@ public class Enemy : Agent
         path.Clear();
         var start = NodeManager.GetClosetNode(this.transform.position);
         var end = NodeManager.GetClosetNode(target);
-        var nodePath = Pathfinding.CalculateAStar(start, end);
-        foreach (var node in nodePath)
+        if (start == null || end == null)
         {
-            path.Add(node.transform.position);
+            Debug.LogWarning("No se encontraron nodos válidos para pathfinding.");
+            return;
         }
+        var nodePath = Pathfinding.CalculateAStar(start, end);
+        if (nodePath == null || nodePath.Count == 0)
+        {
+            Debug.LogWarning($"No hay ruta entre {start.name} y {end.name}");
+            return;
+        }
+        foreach (var node in nodePath)
+            path.Add(node.transform.position);
         path.Add(target);
     }
     private void OnDrawGizmos()
