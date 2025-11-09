@@ -20,7 +20,8 @@ public static class NodeManager
             foreach(Node neigbord in _allNodes)
             {
                 if(node == neigbord)continue;
-                node.AddNeigbord(neigbord);
+                if(LineOfSight.IsOnSight(node.transform.position, neigbord.transform.position))
+                    node.AddNeigbord(neigbord);
             }
         }
     }
@@ -30,8 +31,9 @@ public static class NodeManager
         float minDistance = Mathf.Infinity;
         foreach (Node node in _allNodes)
         {
+            if (!LineOfSight.IsOnSight(node.transform.position, pos)) continue;
             var distance = pos - node.transform.position;
-            if(distance.magnitude < minDistance)
+            if (distance.magnitude < minDistance)
             {
                 minNode = node;
                 minDistance = distance.magnitude;
