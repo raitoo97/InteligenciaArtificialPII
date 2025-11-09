@@ -3,6 +3,8 @@ using UnityEngine;
 public class Enemy : Agent
 {
     private FSM _fsm;
+    [SerializeField]private float _maxStamina;
+    private float _curentStamina;    
     [SerializeField]private List<Transform> _wayPoints = new List<Transform>();
     [SerializeField]private float _nearDistance;
     [SerializeField]private int _index;
@@ -15,7 +17,7 @@ public class Enemy : Agent
         _fsm = new FSM();
         _fsm.AddState(FSM.State.patrol, new PatrolState(_wayPoints, _nearDistance, this, _fsm));
         _fsm.AddState(FSM.State.search, new SearchState(player, _nearDistance, this, _fsm));
-        _fsm.AddState(FSM.State.chase, new ChaseState());
+        _fsm.AddState(FSM.State.chase, new ChaseState(this, _fsm));
         _fsm.ChangeState(FSM.State.patrol);
     }
     private void Start()

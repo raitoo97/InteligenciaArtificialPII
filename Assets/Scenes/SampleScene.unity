@@ -1524,6 +1524,7 @@ MonoBehaviour:
   _maxVelocity: 5
   _maxSteeringForce: 0.1
   _radiusArrive: 7.5
+  _maxStamina: 0
   _wayPoints:
   - {fileID: 1352472149448411022}
   - {fileID: 1728423913}
@@ -1532,8 +1533,8 @@ MonoBehaviour:
   _nearDistance: 1
   _index: 0
   _rotateDegrees: 180
-  _viewRadius: 3.11
-  _viewAngle: 67.61
+  _viewRadius: 11.22
+  _viewAngle: 137.7
 --- !u!1001 &1352472149448411021
 PrefabInstance:
   m_ObjectHideFlags: 0

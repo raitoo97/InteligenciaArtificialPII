@@ -17,6 +17,8 @@ public class PatrolState : IState
     }
     public void Onstart()
     {
+        if(_currentPath.Count>0)
+            _currentPath.Clear();
         Debug.Log("Enter Patrol");
         _currentTarget = _wayPoints[_enemy.Index];
         if (!LineOfSight.IsOnSight(_enemy.transform.position, _currentTarget.position))
@@ -49,7 +51,6 @@ public class PatrolState : IState
         _enemy.GetArriveForce(_currentTarget.position);
         if (distance < _nearDistance) 
         {
-            _enemy.CleanForce();
             _enemy.Index++;
             if (_enemy.Index < _wayPoints.Count)
             {

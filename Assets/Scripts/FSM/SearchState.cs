@@ -16,6 +16,8 @@ public class SearchState : IState
     }
     public void Onstart()
     {
+        if(_currentPath.Count > 0)
+            _currentPath.Clear();
         Debug.Log("Enter Search");
         if (FOV.InFOV(_player.transform,_enemy.transform,_enemy.ViewRadius,_enemy.ViewAngle))
         {
@@ -25,6 +27,11 @@ public class SearchState : IState
     }
     public void OnUpdate()
     {
+        if (FOV.InFOV(_player.transform, _enemy.transform, _enemy.ViewRadius, _enemy.ViewAngle))
+        {
+            _fsm.ChangeState(FSM.State.chase);
+            return;
+        }
         if (_currentPath.Count > 0)
         {
             var currentTarget = _currentPath[0];
@@ -37,13 +44,7 @@ public class SearchState : IState
             }
             return;
         }
-        if(!FOV.InFOV(_player.transform, _enemy.transform, _enemy.ViewRadius, _enemy.ViewAngle))
-        {
-            _fsm.ChangeState(FSM.State.patrol);
-            return;
-        }
-        Debug.Log("Lo veo");
-        _enemy.CleanForce();
+        _fsm.ChangeState(FSM.State.patrol);
     }
     public void OnExit()
     {
