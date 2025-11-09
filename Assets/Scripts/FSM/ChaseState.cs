@@ -6,14 +6,12 @@ public class ChaseState : IState
 {
     public void OnExit()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Enter Chase");
     }
-
     public void Onstart()
     {
         throw new System.NotImplementedException();
     }
-
     public void OnUpdate()
     {
         throw new System.NotImplementedException();

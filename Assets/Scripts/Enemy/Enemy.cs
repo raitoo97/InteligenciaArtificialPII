@@ -3,17 +3,19 @@ using UnityEngine;
 public class Enemy : Agent
 {
     private FSM _fsm;
-    [Header("Patrol")]
     [SerializeField]private List<Transform> _wayPoints = new List<Transform>();
     [SerializeField]private float _nearDistance;
     [SerializeField]private int _index;
     [SerializeField]private float _rotateDegrees;
+    [SerializeField]private float _viewRadius;
+    [SerializeField]private float _viewAngle;
     private void OnEnable()
     {
         var player = GameManager.instance.player;
         _fsm = new FSM();
         _fsm.AddState(FSM.State.patrol, new PatrolState(_wayPoints, _nearDistance, this, _fsm));
         _fsm.AddState(FSM.State.search, new SearchState(player, _nearDistance, this, _fsm));
+        _fsm.AddState(FSM.State.chase, new ChaseState());
         _fsm.ChangeState(FSM.State.patrol);
     }
     private void Start()
@@ -54,7 +56,15 @@ public class Enemy : Agent
     {
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(this.transform.position, _radiusArrive);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, _viewRadius);
+        Vector3 rightDir = Quaternion.Euler(0, _viewAngle * 0.5f, 0) * transform.forward;
+        Vector3 leftDir = Quaternion.Euler(0, -_viewAngle * 0.5f, 0) * transform.forward;
+        Gizmos.DrawLine(transform.position, transform.position + rightDir * _viewRadius);
+        Gizmos.DrawLine(transform.position, transform.position + leftDir * _viewRadius);
     }
     public int Index { get => _index; set => _index = value; }
     public float RotateDegrees { get => _rotateDegrees; }
+    public float ViewRadius { get => _viewRadius; }
+    public float ViewAngle { get => _viewAngle; }
 }

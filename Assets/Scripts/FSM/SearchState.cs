@@ -16,11 +16,11 @@ public class SearchState : IState
     }
     public void Onstart()
     {
-        if(LineOfSight.IsOnSight(_enemy.transform.position, _player.transform.position))
+        if (FOV.InFOV(_player.transform,_enemy.transform,_enemy.ViewRadius,_enemy.ViewAngle))
         {
-            //return;
+            _fsm.ChangeState(FSM.State.chase);
         }
-        _enemy.CalculatePath(_player.transform.position,_currentPath);
+        _enemy.CalculatePath(_player.transform.position, _currentPath);
     }
     public void OnUpdate()
     {
@@ -36,8 +36,11 @@ public class SearchState : IState
             }
             return;
         }
+        if(!FOV.InFOV(_player.transform, _enemy.transform, _enemy.ViewRadius, _enemy.ViewAngle))
+        {
+            _fsm.ChangeState(FSM.State.patrol);
+        }
         _enemy.CleanForce();
-        _fsm.ChangeState(FSM.State.patrol);
     }
     public void OnExit()
     {

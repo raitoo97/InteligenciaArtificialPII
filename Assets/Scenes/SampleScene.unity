@@ -1631,6 +1631,8 @@ MonoBehaviour:
   _nearDistance: 1
   _index: 0
   _rotateDegrees: 180
+  _viewRadius: 3.11
+  _viewAngle: 67.61
 --- !u!1001 &2056808193
 PrefabInstance:
   m_ObjectHideFlags: 0
