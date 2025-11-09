@@ -2,17 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pahtfinding : MonoBehaviour
+public static class Pahtfinding
 {
-    // Start is called before the first frame update
-    void Start()
+    public static List<Node> CalculateAStar(Node start,Node goal)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        return new List<Node>();
     }
 }
