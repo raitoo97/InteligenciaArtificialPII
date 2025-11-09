@@ -20,6 +20,8 @@ public class Node : MonoBehaviour
     private void OnDestroy()
     {
         _neighbords.Clear();
-        NodeManager.RegisterNode(this);
+        NodeManager.RemoveNode(this);
     }
+    public List<Node> GetNeighbords { get => _neighbords; }
+    public int GetCost { get => cost; }
 }
