@@ -17,13 +17,14 @@ public class Enemy : Agent
         var player = GameManager.instance.player;
         _fsm = new FSM();
         _fsm.AddState(FSM.State.patrol, new PatrolState(player,_wayPoints, _nearDistance, this, _fsm));
-        _fsm.AddState(FSM.State.search, new SearchState(player, _nearDistance, this, _fsm));
+        _fsm.AddState(FSM.State.search, new SearchState(player, this, _fsm));
         _fsm.AddState(FSM.State.chase, new ChaseState(player,this, _fsm));
         _fsm.AddState(FSM.State.Idle, new IdleState(_timeToRecovery,this, _fsm));
         _fsm.ChangeState(FSM.State.patrol);
     }
     private void Start()
     {
+        ChangeMove(true);
         SetMaxStamina();
         _index = 0;
     }
@@ -50,10 +51,35 @@ public class Enemy : Agent
         path.Clear();
         var start = NodeManager.GetClosetNode(this.transform.position);
         var end = NodeManager.GetClosetNode(target);
+        if (start == null || end == null)
+        {
+            Debug.Log("No se encontraron nodos en pathfinding");
+            return;
+        }
         var nodePath = Pathfinding.CalculateAStar(start, end);
         foreach (var node in nodePath)
             path.Add(node.transform.position);
         path.Add(target);
+        for (int i = 0; i < path.Count - 1; i++)
+        {
+            Debug.DrawLine(path[i], path[i + 1], Color.cyan, 2f);
+        }
+    }
+    public void TraveledThePath(List<Vector3> path)
+    {
+        if (path.Count == 0) 
+        {
+            Debug.Log("El Camino esta vacio");
+            return;
+        }
+        var currentTarget = path[0];
+        RotateTo(currentTarget - this.transform.position);
+        GetArriveForce(currentTarget);
+        var dis = (currentTarget - this.transform.position).magnitude;
+        if (dis < _nearDistance)
+        {
+            path.RemoveAt(0);
+        }
     }
     public void ModififyStamina()
     {

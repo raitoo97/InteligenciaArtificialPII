@@ -1,9 +1,11 @@
+using System.Collections.Generic;
 using UnityEngine;
 public class ChaseState : IState
 {
-    Enemy _enemy;
-    FSM _fsm;
-    Player _player;
+    private Enemy _enemy;
+    private FSM _fsm;
+    private Player _player;
+    private List<Vector3> _currentPath = new List<Vector3>();
     public ChaseState(Player player,Enemy enemy, FSM fsm)
     {
         _enemy = enemy;
@@ -13,12 +15,22 @@ public class ChaseState : IState
     public void Onstart()
     {
         Debug.Log("Enter Chase");
-        _enemy.CleanForce();
     }
     public void OnUpdate()
     {
         _enemy.ModififyStamina();
+        if (_currentPath.Count > 0)
+        {
+            _enemy.TraveledThePath(_currentPath);
+            return;
+        }
+        _enemy.RotateTo(_player.transform.position);
         _enemy.GetSeekForce(_player.transform.position);
+        if (!LineOfSight.IsOnSight(_enemy.transform.position, _player.transform.position))
+        {
+            _enemy.CalculatePath(_player.transform.position, _currentPath);
+        }
+
     }
     public void OnExit()
     {

@@ -13,6 +13,7 @@ public class IdleState : IState
     public void Onstart()
     {
         Debug.Log("Enter Idle");
+        _enemy.ChangeMove(false);
         _timer = _enemy.TimeToRecovery;
     }
     public void OnUpdate()
@@ -23,6 +24,7 @@ public class IdleState : IState
     }
     public void OnExit()
     {
+        _enemy.ChangeMove(true);
         _enemy.SetMaxStamina();
     }
 }

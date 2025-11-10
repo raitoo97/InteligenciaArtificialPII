@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 public static class NodeManager
 {
-    [SerializeField]private static List<Node> _allNodes = new List<Node>();
+    private static List<Node> _allNodes = new List<Node>();
     public static float _maxDistanceNeighbord = 25;
     public static void RegisterNode(Node node)
     {
@@ -16,6 +16,8 @@ public static class NodeManager
     }
     public static void CompleteNeighbords()
     {
+        foreach (Node node in _allNodes)
+            node.GetNeighbords.Clear();
         foreach (Node node in _allNodes) 
         {
             foreach(Node neigbord in _allNodes)

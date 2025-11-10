@@ -28,21 +28,14 @@ public class PatrolState : IState
     }
     public void OnUpdate()
     {
-        if (FOV.InFOV(_player.transform, _enemy.transform, _enemy.ViewRadius, _enemy.ViewAngle))
+        if (FOV.InFOV(_player.transform, _enemy.transform, _enemy.ViewRadius, _enemy.ViewAngle) || Input.GetKeyDown(KeyCode.Space))
         {
             _fsm.ChangeState(FSM.State.search);
             return;
         }
         if (_currentPath.Count > 0)
         {
-            var currentTarget = _currentPath[0];
-            _enemy.RotateTo(currentTarget - _enemy.transform.position);
-            _enemy.GetSeekForce(currentTarget);
-            var dis = (currentTarget - _enemy.transform.position).magnitude;
-            if (dis < _nearDistance)
-            {
-                _currentPath.RemoveAt(0);
-            }
+            _enemy.TraveledThePath(_currentPath);
             return;
         }
         var dir = _currentTarget.transform.position - _enemy.transform.position;
