@@ -5,7 +5,8 @@ public class FSM
     {
         patrol,
         chase,
-        search
+        search,
+        Idle
     }
     private IState _currentState;
     private Dictionary<State, IState> _allStates = new Dictionary<State, IState>();

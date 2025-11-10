@@ -18,6 +18,11 @@ public class Node : MonoBehaviour
         _neighbords.Clear();
         NodeManager.RemoveNode(this);
     }
+    private void OnDrawGizmos()
+    {
+        //Gizmos.color = Color.yellow;
+        //Gizmos.DrawWireSphere(this.transform.position, NodeManager._maxDistanceNeighbord);
+    }
     public List<Node> GetNeighbords { get => _neighbords; }
     public int GetCost { get => cost; }
 }

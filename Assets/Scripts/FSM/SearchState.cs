@@ -16,12 +16,11 @@ public class SearchState : IState
     }
     public void Onstart()
     {
-        if(_currentPath.Count > 0)
-            _currentPath.Clear();
         Debug.Log("Enter Search");
         if (FOV.InFOV(_player.transform,_enemy.transform,_enemy.ViewRadius,_enemy.ViewAngle))
         {
             _fsm.ChangeState(FSM.State.chase);
+            return;
         }
         _enemy.CalculatePath(_player.transform.position, _currentPath);
     }
@@ -49,6 +48,5 @@ public class SearchState : IState
     public void OnExit()
     {
         Debug.Log("Exit Search");
-        _currentPath.Clear();
     }
 }

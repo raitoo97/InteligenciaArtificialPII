@@ -1,4 +1,5 @@
 using UnityEngine;
+[DefaultExecutionOrder(-100)]
 public class GameManager : MonoBehaviour
 {
     public Player player;

@@ -1,21 +1,28 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
 public class IdleState : IState
 {
-    public void OnExit()
+    private Enemy _enemy;
+    private FSM _fsm;
+    private float _timer;
+    public IdleState(float timer,Enemy enemy, FSM fsm)
     {
-        throw new System.NotImplementedException();
+        _enemy = enemy;
+        _fsm = fsm;
+        _timer = timer;
     }
-
     public void Onstart()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("Enter Idle");
+        _timer = _enemy.TimeToRecovery;
     }
-
     public void OnUpdate()
     {
-        throw new System.NotImplementedException();
+        _timer -= Time.deltaTime;
+        if (_timer <= 0)
+            _fsm.ChangeState(FSM.State.patrol);
+    }
+    public void OnExit()
+    {
+        _enemy.SetMaxStamina();
     }
 }

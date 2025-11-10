@@ -4,6 +4,7 @@ public class Enemy : Agent
 {
     private FSM _fsm;
     [SerializeField]private float _maxStamina;
+    [SerializeField]private float _timeToRecovery;
     private float _curentStamina;    
     [SerializeField]private List<Transform> _wayPoints = new List<Transform>();
     [SerializeField]private float _nearDistance;
@@ -15,13 +16,15 @@ public class Enemy : Agent
     {
         var player = GameManager.instance.player;
         _fsm = new FSM();
-        _fsm.AddState(FSM.State.patrol, new PatrolState(_wayPoints, _nearDistance, this, _fsm));
+        _fsm.AddState(FSM.State.patrol, new PatrolState(player,_wayPoints, _nearDistance, this, _fsm));
         _fsm.AddState(FSM.State.search, new SearchState(player, _nearDistance, this, _fsm));
-        _fsm.AddState(FSM.State.chase, new ChaseState(this, _fsm));
+        _fsm.AddState(FSM.State.chase, new ChaseState(player,this, _fsm));
+        _fsm.AddState(FSM.State.Idle, new IdleState(_timeToRecovery,this, _fsm));
         _fsm.ChangeState(FSM.State.patrol);
     }
     private void Start()
     {
+        SetMaxStamina();
         _index = 0;
     }
     protected override void Update()
@@ -52,6 +55,16 @@ public class Enemy : Agent
             path.Add(node.transform.position);
         path.Add(target);
     }
+    public void ModififyStamina()
+    {
+        _curentStamina -= Time.deltaTime;
+        if (_curentStamina <= 0)
+            _fsm.ChangeState(FSM.State.Idle);
+    }
+    public void SetMaxStamina()
+    {
+        _curentStamina = _maxStamina;
+    }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
@@ -67,4 +80,5 @@ public class Enemy : Agent
     public float RotateDegrees { get => _rotateDegrees; }
     public float ViewRadius { get => _viewRadius; }
     public float ViewAngle { get => _viewAngle; }
+    public float TimeToRecovery { get => _timeToRecovery; }
 }

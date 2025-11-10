@@ -8,17 +8,17 @@ public class PatrolState : IState
     private Enemy _enemy;
     private FSM _fsm;
     private List<Vector3> _currentPath = new List<Vector3>();
-    public PatrolState(List<Transform> wayPoints,float nearDistance,Enemy enemy, FSM fsm)
+    private Player _player;
+    public PatrolState(Player player,List<Transform> wayPoints,float nearDistance,Enemy enemy, FSM fsm)
     {
         _wayPoints = wayPoints;
         _nearDistance = nearDistance;
         _enemy = enemy;
         _fsm = fsm;
+        _player = player;
     }
     public void Onstart()
     {
-        if(_currentPath.Count>0)
-            _currentPath.Clear();
         Debug.Log("Enter Patrol");
         _currentTarget = _wayPoints[_enemy.Index];
         if (!LineOfSight.IsOnSight(_enemy.transform.position, _currentTarget.position))
@@ -28,7 +28,7 @@ public class PatrolState : IState
     }
     public void OnUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (FOV.InFOV(_player.transform, _enemy.transform, _enemy.ViewRadius, _enemy.ViewAngle))
         {
             _fsm.ChangeState(FSM.State.search);
             return;
@@ -66,6 +66,5 @@ public class PatrolState : IState
     public void OnExit()
     {
         Debug.Log("Exit Patrol");
-        _currentPath.Clear();
     }
 }
