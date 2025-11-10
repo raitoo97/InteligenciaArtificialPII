@@ -31,4 +31,5 @@ public class FSM
     {
         _currentState?.OnUpdate();
     }
+    public IState GetCurrentState { get => _currentState; }
 }

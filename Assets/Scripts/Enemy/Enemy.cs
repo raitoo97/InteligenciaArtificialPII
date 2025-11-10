@@ -12,6 +12,11 @@ public class Enemy : Agent
     [SerializeField]private float _rotateDegrees;
     [SerializeField]private float _viewRadius;
     [SerializeField]private float _viewAngle;
+    private Vector3 _lastKnownPlayerPosition;
+    private void Awake()
+    {
+        EnemyManager.instance.RegisterEnemy(this);
+    }
     private void OnEnable()
     {
         var player = GameManager.instance.player;
@@ -91,6 +96,22 @@ public class Enemy : Agent
     {
         _curentStamina = _maxStamina;
     }
+    public void UpdateLastKnownPosition(Vector3 pos)
+    {
+        _lastKnownPlayerPosition = pos;
+    }
+    public void OnAlerted(Vector3 lastKnownPosition, bool sawPlayer)
+    {
+        UpdateLastKnownPosition(lastKnownPosition);
+        if (sawPlayer)
+            _fsm.ChangeState(FSM.State.chase);
+        else
+            _fsm.ChangeState(FSM.State.search);
+    }
+    private void OnDestroy()
+    {
+        EnemyManager.instance.UnregisterEnemy(this);
+    }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
@@ -107,4 +128,5 @@ public class Enemy : Agent
     public float ViewRadius { get => _viewRadius; }
     public float ViewAngle { get => _viewAngle; }
     public float TimeToRecovery { get => _timeToRecovery; }
+    public Vector3 GetLastKnownPlayerPosition { get => _lastKnownPlayerPosition; }
 }

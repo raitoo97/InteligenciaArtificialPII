@@ -28,9 +28,9 @@ public class PatrolState : IState
     }
     public void OnUpdate()
     {
-        if (FOV.InFOV(_player.transform, _enemy.transform, _enemy.ViewRadius, _enemy.ViewAngle) || Input.GetKeyDown(KeyCode.Space))
+        if (FOV.InFOV(_player.transform, _enemy.transform, _enemy.ViewRadius, _enemy.ViewAngle))
         {
-            _fsm.ChangeState(FSM.State.search);
+            EnemyManager.instance.AlertAllEnemies(_enemy, _player.transform.position);
             return;
         }
         if (_currentPath.Count > 0)
