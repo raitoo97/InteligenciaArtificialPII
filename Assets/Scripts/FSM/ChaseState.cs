@@ -24,13 +24,13 @@ public class ChaseState : IState
             _enemy.TraveledThePath(_currentPath);
             return;
         }
-        _enemy.RotateTo(_player.transform.position);
+        Vector3 dir = _player.transform.position - _enemy.transform.position;
+        _enemy.RotateTo(dir);
         _enemy.GetSeekForce(_player.transform.position);
         if (!LineOfSight.IsOnSight(_enemy.transform.position, _player.transform.position))
         {
             _enemy.CalculatePath(_player.transform.position, _currentPath);
         }
-
     }
     public void OnExit()
     {

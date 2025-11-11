@@ -24,12 +24,6 @@ public class SearchState : IState
     }
     public void OnUpdate()
     {
-        if (_enemy.GetLastKnownPlayerPosition != _lastSearchTarget)
-        {
-            _lastSearchTarget = _enemy.GetLastKnownPlayerPosition;
-            _enemy.CalculatePath(_lastSearchTarget, _currentPath);
-            return;
-        }
         if (FOV.InFOV(_player.transform, _enemy.transform, _enemy.ViewRadius, _enemy.ViewAngle))
         {
             EnemyManager.instance.AlertAllEnemies(_enemy, _player.transform.position);
