@@ -79,7 +79,15 @@ public class Enemy : Agent
         }
         var currentTarget = path[0];
         RotateTo(currentTarget - this.transform.position);
-        GetArriveForce(currentTarget);
+        switch (_fsm.GetCurrentKey)
+        {
+            case FSM.State.patrol:
+                GetArriveForce(currentTarget);
+                break;
+            default:
+                GetSeekForce(currentTarget);
+                break;
+        }
         var dis = (currentTarget - this.transform.position).magnitude;
         if (dis < _nearDistance)
         {
@@ -102,7 +110,7 @@ public class Enemy : Agent
     }
     public void OnAlerted(Vector3 lastKnownPosition, bool sawPlayer)
     {
-        UpdateLastKnownPosition(lastKnownPosition);
+        if (_fsm.GetCurrentKey == FSM.State.chase) return;
         if (sawPlayer)
             _fsm.ChangeState(FSM.State.chase);
         else
@@ -129,4 +137,5 @@ public class Enemy : Agent
     public float ViewAngle { get => _viewAngle; }
     public float TimeToRecovery { get => _timeToRecovery; }
     public Vector3 GetLastKnownPlayerPosition { get => _lastKnownPlayerPosition; }
+    public FSM.State GetStateEnemy { get => _fsm.GetCurrentKey; }
 }

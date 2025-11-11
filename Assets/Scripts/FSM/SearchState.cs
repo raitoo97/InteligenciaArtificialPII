@@ -7,6 +7,7 @@ public class SearchState : IState
     private FSM _fsm;
     private List<Vector3> _currentPath = new List<Vector3>();
     private Vector3 _lastSearchTarget;
+    private float _recalculateDistance = 2f;
     public SearchState(Player player, Enemy enemy, FSM fsm)
     {
         _player = player;
@@ -16,18 +17,20 @@ public class SearchState : IState
     public void Onstart()
     {
         Debug.Log("Enter Search");
-        if (_enemy.GetLastKnownPlayerPosition != _lastSearchTarget)
-        {
-            _lastSearchTarget = _enemy.GetLastKnownPlayerPosition;
-            _enemy.CalculatePath(_lastSearchTarget, _currentPath);
-        }
+        _lastSearchTarget = _enemy.GetLastKnownPlayerPosition;
+        _enemy.CalculatePath(_lastSearchTarget, _currentPath);
     }
     public void OnUpdate()
     {
         if (FOV.InFOV(_player.transform, _enemy.transform, _enemy.ViewRadius, _enemy.ViewAngle))
         {
-            EnemyManager.instance.AlertAllEnemies(_enemy, _player.transform.position);
+            EnemyManager.instance.AlertAllEnemies(_player.transform.position);
             return;
+        }
+        if ((_lastSearchTarget - _enemy.GetLastKnownPlayerPosition).magnitude > _recalculateDistance)
+        {
+            _lastSearchTarget = _enemy.GetLastKnownPlayerPosition;
+            _enemy.CalculatePath(_lastSearchTarget, _currentPath);
         }
         if (_currentPath.Count > 0)
         {
@@ -38,6 +41,7 @@ public class SearchState : IState
     }
     public void OnExit()
     {
+        _currentPath.Clear();
         Debug.Log("Exit Search");
     }
 }

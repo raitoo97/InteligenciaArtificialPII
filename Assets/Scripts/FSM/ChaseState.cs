@@ -1,11 +1,11 @@
-using System.Collections.Generic;
 using UnityEngine;
 public class ChaseState : IState
 {
     private Enemy _enemy;
     private FSM _fsm;
     private Player _player;
-    private List<Vector3> _currentPath = new List<Vector3>();
+    private float _lostSightTimer;
+    private float _maxLostSightTime = 1.5f;
     public ChaseState(Player player,Enemy enemy, FSM fsm)
     {
         _enemy = enemy;
@@ -19,17 +19,22 @@ public class ChaseState : IState
     public void OnUpdate()
     {
         _enemy.ModififyStamina();
-        if (_currentPath.Count > 0)
+        if (LineOfSight.IsOnSight(_enemy.transform.position, _player.transform.position))
         {
-            _enemy.TraveledThePath(_currentPath);
+            _lostSightTimer = 0f;
+            Vector3 playerdir = _player.transform.position - _enemy.transform.position;
+            _enemy.RotateTo(playerdir);
+            _enemy.GetSeekForce(_player.transform.position);
+            _enemy.UpdateLastKnownPosition(_player.transform.position);
             return;
         }
-        Vector3 dir = _player.transform.position - _enemy.transform.position;
-        _enemy.RotateTo(dir);
-        _enemy.GetSeekForce(_player.transform.position);
-        if (!LineOfSight.IsOnSight(_enemy.transform.position, _player.transform.position))
+        else
         {
-            _enemy.CalculatePath(_player.transform.position, _currentPath);
+            _lostSightTimer += Time.deltaTime;
+            if (_lostSightTimer >= _maxLostSightTime)
+            {
+                _fsm.ChangeState(FSM.State.search);
+            }
         }
     }
     public void OnExit()

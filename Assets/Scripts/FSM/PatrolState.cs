@@ -30,7 +30,7 @@ public class PatrolState : IState
     {
         if (FOV.InFOV(_player.transform, _enemy.transform, _enemy.ViewRadius, _enemy.ViewAngle))
         {
-            EnemyManager.instance.AlertAllEnemies(_enemy, _player.transform.position);
+            EnemyManager.instance.AlertAllEnemies(_player.transform.position);
             return;
         }
         if (_currentPath.Count > 0)
@@ -58,6 +58,7 @@ public class PatrolState : IState
     }
     public void OnExit()
     {
+        _currentPath.Clear();
         Debug.Log("Exit Patrol");
     }
 }
