@@ -5,7 +5,7 @@ public class ChaseState : IState
     private FSM _fsm;
     private Player _player;
     private float _lostSightTimer;
-    private float _maxLostSightTime = 1.5f;
+    private float _maxLostSightTime = 2f;
     public ChaseState(Player player,Enemy enemy, FSM fsm)
     {
         _enemy = enemy;

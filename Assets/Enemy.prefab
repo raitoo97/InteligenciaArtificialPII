@@ -230,7 +230,7 @@ MonoBehaviour:
   _maxSteeringForce: 0.1
   _radiusArrive: 7.5
   _canMove: 0
-  _maxStamina: 50
+  _maxStamina: 20
   _timeToRecovery: 5
   _wayPoints:
   - {fileID: 0}
