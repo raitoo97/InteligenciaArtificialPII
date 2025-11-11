@@ -9,6 +9,7 @@ public class FSM
         Idle
     }
     private IState _currentState;
+    private State _currentKey;
     private Dictionary<State, IState> _allStates = new Dictionary<State, IState>();
     public void AddState(State key, IState value)
     {
@@ -25,11 +26,12 @@ public class FSM
         if (!_allStates.ContainsKey(key)) return;
         _currentState?.OnExit();
         _currentState = _allStates[key];
+        _currentKey = key;
         _currentState?.Onstart();
     }
     public void OnUpdateState()
     {
         _currentState?.OnUpdate();
     }
-    public IState GetCurrentState { get => _currentState; }
+    public State GetCurrentKey { get => _currentKey; }
 }

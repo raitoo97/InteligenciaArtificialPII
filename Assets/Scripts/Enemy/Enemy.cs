@@ -79,7 +79,15 @@ public class Enemy : Agent
         }
         var currentTarget = path[0];
         RotateTo(currentTarget - this.transform.position);
-        GetArriveForce(currentTarget);
+        switch (_fsm.GetCurrentKey)
+        {
+            case FSM.State.patrol:
+                GetArriveForce(currentTarget);
+                break;
+            case FSM.State.search:
+                GetSeekForce(currentTarget);
+                break;
+        }
         var dis = (currentTarget - this.transform.position).magnitude;
         if (dis < _nearDistance)
         {
