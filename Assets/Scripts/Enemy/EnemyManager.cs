@@ -22,7 +22,7 @@ public class EnemyManager : MonoBehaviour
         if (_enemies.Contains(enemy))
             _enemies.Remove(enemy);
     }
-    public void AlertAllEnemies(Enemy caller, Vector3 lastKnownPosition)
+    public void AlertAllEnemies(Vector3 lastKnownPosition)
     {
         foreach (var enemy in _enemies)
         {

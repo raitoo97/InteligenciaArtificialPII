@@ -24,7 +24,7 @@ public class SearchState : IState
     {
         if (FOV.InFOV(_player.transform, _enemy.transform, _enemy.ViewRadius, _enemy.ViewAngle))
         {
-            EnemyManager.instance.AlertAllEnemies(_enemy, _player.transform.position);
+            EnemyManager.instance.AlertAllEnemies(_player.transform.position);
             return;
         }
         if ((_lastSearchTarget - _enemy.GetLastKnownPlayerPosition).magnitude > _recalculateDistance)
