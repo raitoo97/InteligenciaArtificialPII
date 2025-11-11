@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 [DefaultExecutionOrder(-90)]
@@ -27,7 +26,10 @@ public class EnemyManager : MonoBehaviour
     {
         foreach (var enemy in _enemies)
         {
-            if (enemy == caller)
+            enemy.UpdateLastKnownPosition(lastKnownPosition);
+            if (enemy.GetStateEnemy == FSM.State.chase) continue;
+            bool canSeePlayer = LineOfSight.IsOnSight(enemy.transform.position, lastKnownPosition);
+            if (canSeePlayer)
             {
                 enemy.OnAlerted(lastKnownPosition, true);
             }

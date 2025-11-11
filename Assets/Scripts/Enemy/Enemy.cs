@@ -84,7 +84,7 @@ public class Enemy : Agent
             case FSM.State.patrol:
                 GetArriveForce(currentTarget);
                 break;
-            case FSM.State.search:
+            default:
                 GetSeekForce(currentTarget);
                 break;
         }
@@ -110,7 +110,7 @@ public class Enemy : Agent
     }
     public void OnAlerted(Vector3 lastKnownPosition, bool sawPlayer)
     {
-        UpdateLastKnownPosition(lastKnownPosition);
+        if (_fsm.GetCurrentKey == FSM.State.chase) return;
         if (sawPlayer)
             _fsm.ChangeState(FSM.State.chase);
         else
@@ -137,4 +137,5 @@ public class Enemy : Agent
     public float ViewAngle { get => _viewAngle; }
     public float TimeToRecovery { get => _timeToRecovery; }
     public Vector3 GetLastKnownPlayerPosition { get => _lastKnownPlayerPosition; }
+    public FSM.State GetStateEnemy { get => _fsm.GetCurrentKey; }
 }

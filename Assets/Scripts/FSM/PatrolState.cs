@@ -58,6 +58,7 @@ public class PatrolState : IState
     }
     public void OnExit()
     {
+        _currentPath.Clear();
         Debug.Log("Exit Patrol");
     }
 }
